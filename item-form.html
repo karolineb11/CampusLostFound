@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report an item · CampusFind</title><link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar"><a class="brand" th:href="@{/}"><span class="brand-mark">LF</span> Campus<span>Find</span></a>
+    <nav><a class="nav-link" th:href="@{/}">← Back to dashboard</a></nav></header>
+<main class="form-page">
+    <div class="form-intro"><p class="eyebrow">HELP YOUR CAMPUS</p><h1>Report an item</h1>
+        <p>Share a few details so the right person can find it.</p></div>
+    <form class="report-form" th:action="@{/items}" th:object="${item}" method="post">
+        <div class="form-row">
+            <div class="field"><label for="type">Report type</label>
+                <select id="type" th:field="*{type}" required>
+<option value="">Choose one</option>
+<option value="LOST">LOST</option>
+<option value="FOUND">FOUND</option>
+                </select><small class="error" th:errors="*{type}"></small></div>
+            <div class="field"><label for="title">Item name</label>
+                <input id="title" type="text" th:field="*{title}" placeholder="e.g. Black water bottle" required>
+                <small class="error" th:errors="*{title}"></small></div>
+        </div>
+        <div class="field"><label for="description">Description</label>
+            <textarea id="description" th:field="*{description}" rows="4" placeholder="Describe the item and any identifying details..." required></textarea>
+            <small class="error" th:errors="*{description}"></small></div>
+ <div class="field">
+    <label for="category">Category</label>
+    <select id="category" th:field="*{category}" required>
+        <option value="">Choose category</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Books & Notes">Books & Notes</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Wallet / ID">Wallet / ID</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Other">Other</option>
+    </select>
+    <small class="error" th:errors="*{category}"></small>
+</div>
+            <div class="field"><label for="location">Location</label>
+                <input id="location" type="text" th:field="*{location}" placeholder="e.g. Library, Block A" required>
+                <small class="error" th:errors="*{location}"></small></div>
+        </div>
+        <div class="field"><label for="dateReported">Date</label>
+            <input id="dateReported" type="date" th:field="*{dateReported}" required>
+            <small class="error" th:errors="*{dateReported}"></small></div>
+        <div class="form-divider"></div><h3>Your contact details</h3>
+        <div class="form-row">
+            <div class="field"><label for="contactName">Your name</label>
+                <input id="contactName" type="text" th:field="*{contactName}" placeholder="Enter your name" required>
+                <small class="error" th:errors="*{contactName}"></small></div>
+            <div class="field"><label for="contactEmail">Email address</label>
+                <input id="contactEmail" type="email" th:field="*{contactEmail}" placeholder="you@example.com" required>
+                <small class="error" th:errors="*{contactEmail}"></small></div>
+        </div>
+        <button class="primary-button submit-button" type="submit">Submit report →</button>
+        <p class="privacy-note">Your contact email will be visible to people viewing this report.</p>
+    </form>
+</main>
+</body>
+</html>

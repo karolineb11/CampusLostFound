@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Lost & Found</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}"><span class="brand-mark">LF</span> Campus<span>Find</span></a>
+    <nav><a class="nav-link active" th:href="@{/}">Dashboard</a>
+        <a class="nav-button" th:href="@{/items/new}">＋ Report an item</a></nav>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <div>
+            <p class="eyebrow">YOUR CAMPUS COMMUNITY</p>
+            <h1>Lost something?<br><span>Let's find it.</span></h1>
+            <p class="hero-copy">A little help from your campus can bring your belongings back.</p>
+            <a class="primary-button" th:href="@{/items/new}">＋ Create a report</a>
+        </div>
+        <div class="hero-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="search-emoji">⌕</div><div class="floating-tag tag-one">✦ Found</div>
+            <div class="floating-tag tag-two">↗ Lost</div></div>
+    </section>
+
+    <div th:if="${successMessage}" class="alert" th:text="${successMessage}"></div>
+
+    <section class="stats">
+        <article class="stat-card"><div class="stat-icon purple">▤</div><p>Total reports</p><strong th:text="${totalCount}">0</strong></article>
+        <article class="stat-card"><div class="stat-icon orange">⌕</div><p>Lost items</p><strong th:text="${lostCount}">0</strong></article>
+        <article class="stat-card"><div class="stat-icon green">✓</div><p>Found items</p><strong th:text="${foundCount}">0</strong></article>
+        <article class="stat-card"><div class="stat-icon blue">◷</div><p>Still open</p><strong th:text="${openCount}">0</strong></article>
+    </section>
+
+    <section class="list-section">
+        <div class="section-heading"><div><p class="eyebrow">CAMPUS ACTIVITY</p><h2>Recent reports</h2></div>
+            <form class="search-form" method="get" th:action="@{/}">
+                <input type="text" name="keyword" placeholder="Search name, category, location..." th:value="${keyword}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(items)}">
+            <div class="empty-icon">⌕</div><h3>No reports found</h3>
+            <p>Try another search or create the first report.</p>
+            <a th:href="@{/items/new}" class="text-link">Report an item →</a>
+        </div>
+
+        <div class="item-grid" th:if="${!#lists.isEmpty(items)}">
+            <article class="item-card" th:each="item : ${items}">
+                <div class="card-top"><span class="type-pill" th:classappend="${item.type.name() == 'LOST'} ? ' lost' : ' found'" th:text="${item.type}">LOST</span>
+                    <span class="status" th:text="${item.status}">OPEN</span></div>
+                <h3 th:text="${item.title}">Item name</h3>
+                <p class="description" th:text="${item.description}">Description</p>
+                <div class="item-meta"><span>⌖ <span th:text="${item.location}">Location</span></span>
+                    <span>▦ <span th:text="${item.category}">Category</span></span></div>
+                <div class="card-footer"><div><small>REPORTED BY</small><strong th:text="${item.contactName}">Name</strong></div>
+                    <a class="email-link" th:href="'mailto:' + ${item.contactEmail}">Contact ↗</a></div>
+                <div class="card-actions">
+                    <form th:action="@{/items/{id}/status(id=${item.id})}" method="post">
+                        <select name="status" aria-label="Update status">
+                            <option value="OPEN" th:selected="${item.status.name() == 'OPEN'}">Open</option>
+                            <option value="CLAIMED" th:selected="${item.status.name() == 'CLAIMED'}">Claimed</option>
+                            <option value="RETURNED" th:selected="${item.status.name() == 'RETURNED'}">Returned</option>
+                        </select><button class="small-button" type="submit">Update</button>
+                    </form>
+                    <form th:action="@{/items/{id}/delete(id=${item.id})}" method="post" onsubmit="return confirm('Delete this report?')">
+                        <button class="delete-button" type="submit">Delete</button>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </section>
+    <footer>CampusFind · Built to help good things find their way back.</footer>
+</main>
+</body>
+</html>
